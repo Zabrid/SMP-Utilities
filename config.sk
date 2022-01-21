@@ -1,0 +1,70 @@
+#
+# Survival Multiplayer Utilities
+# 
+# Version : 1.0
+# Author : {zabrid}#3433
+# Support : https://discord.gg/vMuWFWXJVy
+#
+
+options:
+
+# Configuration
+
+#  Features
+    one-person-sleep-enabled: True
+    lumberjack-enabled: True
+    player-heads-enabled: True
+
+#  Misc Config Options
+    player-head-drop-chance: 100
+    player-head-name: "<gold>{player}'s Head"
+    playtime-command-perm: smputils.playtime
+    playtime-viewothers-perm: smputils.playtime.viewothers
+
+#  Messages
+    player-slept-message: "<gold>[SMP-Utilities]<yellow> {player} has slept. Good morning (:"
+    playtime-message: "<gold>[SMP-Utilities]<yellow> {player}'s playtime: <gold>{playtime}<yellow>."
+    playtime-noperms-message: "<red>You do not have permission to use &n/playtime<red>."
+    playtime-viewothers-noperms-message: "<red>You do not have permission to view another player's playtime."
+    playtime-invalid-player-specified-message: "<red>The player you specified has no playtime."
+
+
+
+
+
+
+
+
+
+
+#
+# ! Do Not Go Beyond This Point !
+#
+
+function smputils_getconfig(v: text) :: texts:
+    if {_v} is "one-person-sleep-enabled":
+        return "{@one-person-sleep-enabled}"
+    else if {_v} is "lumberjack-enabled":
+        return "{@lumberjack-enabled}"
+    else if {_v} is "player-heads-enabled":
+        return "{@player-heads-enabled}"
+    else if {_v} is "player-head-drop-chance":
+        return "{@player-head-drop-chance}"
+    else if {_v} is "playtime-command-perm":
+        return "{@playtime-command-perm}"
+    else if {_v} is "playtime-viewothers-perm":
+        return "{@playtime-viewothers-perm}"
+    else if {_v} is "playtime-noperms-message":
+        return {@playtime-noperms-message}
+    else if {_v} is "playtime-viewothers-noperms-message":
+        return {@playtime-viewothers-noperms-message}
+    else if {_v} is "player-slept-message":
+        return {@player-slept-message}
+    else if {_v} is "playtime-message":
+        return {@playtime-message}
+    else if {_v} is "playtime-invalid-player-specified-message":
+        return {@playtime-invalid-player-specified-message}
+    else if {_v} is "player-head-name":
+        return {@player-head-name}
+    else:
+        return "Invalid Value Specified."

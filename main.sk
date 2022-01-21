@@ -1,0 +1,79 @@
+#
+# Survival Multiplayer Utilities
+# 
+# Version : 1.0
+# Author : {zabrid}#3433
+# Support : https://discord.gg/vMuWFWXJVy
+#
+
+#
+# ! Do Not Go Beyond This Point !
+#
+
+on bed enter:
+    if smputils_getconfig("one-person-sleep-enabled") is "True":
+        set {_message::*} to smputils_getconfig("player-slept-message")
+        replace all "{player}" in {_message::*} with "%player%"
+        wait 80 ticks
+        send {_message::*} to all players
+        set time to 07:00
+
+on join:
+    if {smputils-playtime::%uuid of player%} is set:
+        set {smputils-playtime::%uuid of player%} to 0
+    while player is online:
+        add 1 to {smputils-playtime::%uuid of player%}
+        wait 1 second
+
+command /playtime [<offline player>]:
+    aliases: /pt
+    trigger:
+        if player has permission "%smputils_getconfig("playtime-command-perm")%":
+            if arg 1 is not set:
+                set {_playtime} to "%{smputils-playtime::%uuid of player%} ? 0% seconds"
+                set {_playtime} to {_playtime} parsed as timespan
+                set {_message::*} to smputils_getconfig("playtime-message")
+                replace all "{playtime}" in {_message::*} with "%{_playtime}%"
+                replace all "{player}" in {_message::*} with "%player%"
+                send {_message::*}
+            else:
+                if player has permission "%smputils_getconfig("playtime-viewothers-perm")%":
+                    if {smputils-playtime::%uuid of arg 1%} is set:
+                        set {_playtime} to "%{smputils-playtime::%uuid of arg 1%} ? 0% seconds"
+                        set {_playtime} to {_playtime} parsed as timespan
+                        set {_message::*} to smputils_getconfig("playtime-message")
+                        replace all "{playtime}" in {_message::*} with "%{_playtime}%"
+                        replace all "{player}" in {_message::*} with "%arg 1%"
+                        send {_message::*}
+                    else:
+                        send smputils_getconfig("playtime-viewothers-noperms-message")
+                else:
+                    send smputils_getconfig("playtime-viewothers-noperms-message")
+        else:
+            send smputils_getconfig("playtime-noperms-message")
+
+on break:
+    event-block is any log
+    player's tool is any axe
+    player is sneaking
+    smputils_getconfig("lumberjack-enabled") is "True"
+    set {_loc} to event-location
+    loop 255 times:
+        add 1 to y coordinate of {_loc}
+        if block at {_loc}'s type is event-block's type:
+            set block at {_loc} to air
+            drop 1 of event-block at {_loc}
+        else:
+            stop
+
+on death:
+    victim is a player
+    smputils_getconfig("player-heads-enabled") is "True"
+    set {_chance1} to smputils_getconfig("player-head-drop-chance") parsed as number
+    set {_chance2} to a random integer between 1 and 100
+    if {_chance2} is between 1 and {_chance1}:
+        set {_name::*} to smputils_getconfig("player-head-name")
+        replace all "{player}" in {_name::*} with "%victim%"
+        broadcast "%{_name::*}%"
+        broadcast "%skull of victim%"
+        drop 1 of skull of victim named "%{_name::*}%" at event-location
